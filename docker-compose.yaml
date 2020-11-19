@@ -7,7 +7,7 @@ services:
       context: ./config
       dockerfile: Dockerfile
     image: digitalocean.com/php
-    container_name: app
+    container_name: app-data
     restart: unless-stopped
     tty: true
     working_dir: /var/www
@@ -20,21 +20,21 @@ services:
   #Nginx Service
   webserver:
     image: nginx:alpine
-    container_name: webserver
+    container_name: webserver-data
     restart: unless-stopped
     tty: true
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./:/var/www
+      - ./app:/var/www
       - ./config/nginx/conf.d/:/etc/nginx/conf.d/
     networks:
       - app-network
 
   db:
     image: mariadb
-    container_name: db
+    container_name: db-data
     restart: unless-stopped
     tty: true
     ports:
