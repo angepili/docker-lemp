@@ -8,6 +8,7 @@ WORKDIR /var/www
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
+    g++ \
     build-essential \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -16,9 +17,21 @@ RUN apt-get update && apt-get install -y \
     zip \
     jpegoptim optipng pngquant gifsicle \
     vim \
+    mariadb-client \
+    libicu-dev \
     unzip \
     git \
-    curl
+    curl \
+    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install iconv \
+    #&& docker-php-ext-install mcrypt \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install opcache \
+    && docker-php-ext-install mbstring \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install mysqli \
+	&& docker-php-ext-enable mysqli
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
